@@ -29,6 +29,12 @@ public class Code01_FindMinKth {
 		return maxHeap.peek();
 	}
 
+	/**
+	 * arr[L..R]  范围上，如果排序的话(不是真的去排序)，找位于index的数
+	 * @param array
+	 * @param k
+	 * @return
+	 */
 	// 改写快排，时间复杂度O(N)
 	public static int minKth2(int[] array, int k) {
 		int[] arr = copyArray(array);
@@ -57,24 +63,40 @@ public class Code01_FindMinKth {
 		// range[0] range[1]
 		//  L   ..... R     pivot 
 		//  0         1000     70...800
+		//返回的范围中值都是pivot
 		int[] range = partition(arr, L, R, pivot);
 		if (index >= range[0] && index <= range[1]) {
+			//如果index位于改范围内，就返回pivot
 			return arr[index];
 		} else if (index < range[0]) {
+			//如果index在范围左边，去左边找
 			return process2(arr, L, range[0] - 1, index);
 		} else {
 			return process2(arr, range[1] + 1, R, index);
 		}
 	}
 
+	/**
+	 * 先找个随机位置的数pivot
+	 * 定义了两个区域，less区域和more区域
+	 * 当cur的数小于pivot，扩大less区域；当cur的数大于pivot，扩大more区域
+	 * 结束后返回一个范围，范围左边的数都比pivot小，范围右边的数都比pivot大。
+	 * @param arr
+	 * @param L
+	 * @param R
+	 * @param pivot
+	 * @return
+	 */
 	public static int[] partition(int[] arr, int L, int R, int pivot) {
 		int less = L - 1;
 		int more = R + 1;
 		int cur = L;
 		while (cur < more) {
 			if (arr[cur] < pivot) {
+				//这里先移动less指针，再把curr的数换过去，换过来的数不用看了，因为一定比curr数小，所以看下一个
 				swap(arr, ++less, cur++);
 			} else if (arr[cur] > pivot) {
+				//这里先移动more指针，再把curr的数换过去，换过来的数要看一下，因为还没看过
 				swap(arr, cur, --more);
 			} else {
 				cur++;
